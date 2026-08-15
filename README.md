@@ -12,6 +12,7 @@ Instead of a single-purpose "generate text" script, this agent handles **three d
 
 The agent decides which task type it's dealing with on its own — no manual tagging required.
 
+![Architecture Diagram](architecture.png)
 ## How it works
 
 ```
@@ -82,7 +83,37 @@ uvicorn main:app --reload
 streamlit run dashboard.py
 ```
 
-## Example run
+## Example runs
+
+**1. Product description**
+
+**Input:** `"Rosehip Oil Face Serum, cold-pressed rosehip oil, fades dark spots and improves skin texture"`
+
+**Detected type:** `product_description`
+
+**Output:**
+> "Rosehip Oil Face Serum: 100% cold-pressed rosehip oil, rich in 0.5% trans-retinoic acid, fades dark spots and improves skin texture by promoting cell turnover and collagen production. Regular use of this serum results in a more even-toned complexion within 4-6 weeks."
+
+**Score:** 9/10 · **Status:** APPROVED · **Attempts:** 1
+
+---
+
+**2. Ad headline**
+
+**Input:** `"Promote our Black Friday sale on the entire skincare line"`
+
+**Detected type:** `ad_headline`
+
+**Output:**
+> 15% Vitamin C, now on sale
+> Niacinamide 10% sale starts Friday
+> Glycolic 7% products discounted
+
+**Score:** 8/10 · **Status:** APPROVED · **Attempts:** 1
+
+---
+
+**3. Customer reply**
 
 **Input:** `"Customer says the moisturizer broke them out, they want a refund"`
 
@@ -92,6 +123,21 @@ streamlit run dashboard.py
 > "We apologize for the reaction you experienced with the moisturizer. We take this seriously and would like to process your refund immediately — please reply with your order number and we'll take care of it within 24 hours."
 
 **Score:** 8/10 · **Status:** APPROVED · **Attempts:** 1
+
+---
+
+**4. Retry in action** (low initial score triggered an automatic regeneration)
+
+**Input:** `"Argan Oil Hair Serum, 100% pure argan oil, tames frizz and adds shine"`
+
+**Detected type:** `product_description`
+
+**Attempt 1:** scored below threshold on brand tone match → agent regenerated using the critique feedback
+
+**Final output (attempt 2):**
+> "Argan Oil Hair Serum: 100% pure argan oil tames frizz and adds shine, leveraging its high oleic acid content to smooth and protect the hair cuticle."
+
+**Score:** 8/10 · **Status:** APPROVED · **Attempts:** 2
 
 ## What makes this "agentic" rather than a script
 
