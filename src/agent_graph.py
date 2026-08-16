@@ -47,7 +47,7 @@ def generate_node(state: AgentState) -> AgentState:
 
 
 def critique_node(state: AgentState) -> AgentState:
-    score, reason = critique_output(state["description"], brand_guidelines)
+    score, reason = critique_output(state["description"], brand_guidelines, task_type=state["task_type"])
     state["score"] = score
     state["reason"] = reason
     state["attempt_history"].append({
