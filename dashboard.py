@@ -5,15 +5,16 @@ import time
 
 from src.agent_graph import run_agent, run_batch
 from data.sample_products import sample_products
+from src.notifier import send_to_slack
 
 st.set_page_config(page_title="Marketing Automation Agent", layout="wide")
 
-st.title(" Autonomous Marketing Content Agent")
+st.title("Autonomous Marketing Content Agent")
 st.caption("Classifies request type → RAG-grounded generation → self-critique → retry → logged & tracked")
 
 TASK_LABELS = {
-    "product_description": " Product Description",
-    "ad_headline": " Ad Headline",
+    "product_description": "Product Description",
+    "ad_headline": "Ad Headline",
     "customer_reply": "Customer Reply",
 }
 
@@ -37,11 +38,11 @@ with tab1:
     if st.button("Generate", key="single"):
         if request_input:
             with st.status("Agent working...", expanded=True) as status:
-                st.write(" Classifying request type...")
-                st.write(" Retrieving relevant brand context...")
-                st.write(" Generating content...")
+                st.write("Classifying request type...")
+                st.write("Retrieving relevant brand context...")
+                st.write("Generating content...")
                 result = run_agent(request_input)
-                st.write(" Self-critiquing output...")
+                st.write("Self-critiquing output...")
                 time.sleep(0.2)
                 status.update(
                     label=f"Done — detected as {TASK_LABELS.get(result['task_type'], result['task_type'])}",
@@ -54,8 +55,12 @@ with tab1:
             st.write("**Output:**")
             st.write(result["description"])
 
+            if result["status"] == "APPROVED":
+                send_to_slack(request_input, result["description"], result["score"], result["status"])
+                st.caption("Sent to Slack")
+
             if len(result["attempt_history"]) > 1:
-                st.warning(f" Took {len(result['attempt_history'])} attempts (retried due to low initial score)")
+                st.warning(f"Took {len(result['attempt_history'])} attempts (retried due to low initial score)")
                 with st.expander("See attempt history"):
                     for a in result["attempt_history"]:
                         st.write(f"Attempt {a['attempt']}: Score {a['score']}/10 — {a['reason']}")

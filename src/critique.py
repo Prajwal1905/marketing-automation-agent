@@ -4,7 +4,7 @@ import re
 
 load_dotenv()
 
-llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
+llm = ChatGroq(model="openai/gpt-oss-120b", temperature=0)
 
 CRITERIA_BY_TASK = {
     "product_description": """- Mentions the key active ingredient and its percentage/concentration

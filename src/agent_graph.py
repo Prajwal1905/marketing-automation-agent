@@ -11,7 +11,7 @@ from data.brand_data import brand_guidelines
 
 load_dotenv()
 
-llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0.7)
+llm = ChatGroq(model="openai/gpt-oss-120b", temperature=0.7)
 
 SCORE_THRESHOLD = 7
 MAX_RETRIES = 2
