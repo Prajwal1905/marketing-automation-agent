@@ -12,6 +12,9 @@ Instead of a single-purpose "generate text" script, this agent handles **three d
 
 The agent decides which task type it's dealing with on its own — no manual tagging required.
 
+##  Demo Video
+[Watch the demo](https://drive.google.com/file/d/1Rcgsjd8MUuSOzj_Lu0j1hlqVN5F7BGFo/view?usp=sharing)
+
 ![Architecture Diagram](architecture.png)
 ## How it works
 
